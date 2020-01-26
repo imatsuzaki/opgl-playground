@@ -25,6 +25,8 @@
 /* Begin PBXFileReference section */
 		45DCC61023D945B40069685E /* opgl-playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "opgl-playground"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45DCC61323D945B40069685E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		78F52AD323DDD8680099DE25 /* point.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = point.vert; sourceTree = "<group>"; };
+		78F52AD423DDD9850099DE25 /* point.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = point.frag; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +60,8 @@
 			isa = PBXGroup;
 			children = (
 				45DCC61323D945B40069685E /* main.cpp */,
+				78F52AD323DDD8680099DE25 /* point.vert */,
+				78F52AD423DDD9850099DE25 /* point.frag */,
 			);
 			path = "opgl-playground";
 			sourceTree = "<group>";

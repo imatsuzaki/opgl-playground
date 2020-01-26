@@ -8,6 +8,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -20,6 +21,33 @@ GLboolean printShaderInfoLog(GLuint shader, const char *str)
     if (status == GL_FALSE) std::cerr << "Compile Error in " << str << std::endl;
     
     GLsizei bufSize;
+    glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &bufSize);
+    
+    if (bufSize > 1) {
+        std::vector<GLchar> infoLog(bufSize);
+        GLsizei length;
+        glGetShaderInfoLog(shader, bufSize, &length, &infoLog[0]);
+        std::cerr << &infoLog[0] << std::endl;
+    }
+    
+    return static_cast<GLboolean>(status);
+}
+
+// Show reult of link.
+GLboolean printProgramInfoLog(GLuint program) {
+    GLint status;
+    glGetProgramiv(program, GL_LINK_STATUS, &status);
+    if (status == GL_FALSE) std::cerr << "Link Error." << std::endl;
+    
+    GLsizei bufSize;
+    glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufSize);
+    
+    if (bufSize > 1) {
+        std::vector<GLchar> infoLog(bufSize);
+        GLsizei length;
+        glGetProgramInfoLog(program, bufSize, &length, &infoLog[0]);
+        std::cerr << &infoLog[0] << std::endl;
+    }
     
     return static_cast<GLboolean>(status);
 }
@@ -36,7 +64,9 @@ GLuint createProgram(const char *vsrc, const char *fsrc){
         const GLuint vobj(glCreateShader(GL_VERTEX_SHADER));
         glShaderSource(vobj, 1, &vsrc, NULL);
         glCompileShader(vobj);
-        glAttachShader(program, vobj);
+        
+        if (printShaderInfoLog(vobj, "vertex shader."))
+            glAttachShader(program, vobj);
         glDeleteShader(vobj);
     }
     
@@ -45,7 +75,9 @@ GLuint createProgram(const char *vsrc, const char *fsrc){
         const GLuint fobj(glCreateShader(GL_FRAGMENT_SHADER));
         glShaderSource(fobj, 1, &fsrc, NULL);
         glCompileShader(fobj);
-        glAttachShader(program, fobj);
+        
+        if (printShaderInfoLog(fobj, "fragment shader"))
+            glAttachShader(program, fobj);
         glDeleteShader(fobj);
     }
     
@@ -53,7 +85,53 @@ GLuint createProgram(const char *vsrc, const char *fsrc){
     glBindFragDataLocation(program, 0, "fragment");
     glLinkProgram(program);
     
-    return program;
+    if (printProgramInfoLog(program))
+        return program;
+    
+    glDeleteProgram(program);
+    return 0;
+}
+
+// Return memory where shader source file read.
+// name :shader source file name
+// buffer: text which read source file
+bool readShaderSource(const char *name, std::vector<GLchar> &buffer){
+    if (name == NULL) return false;
+    
+    std::ifstream file(name, std::ios::binary);
+    if (file.fail()) {
+        std::cerr << "Error: Can't open source file: " << name << std::endl;
+        return false;
+    }
+    
+    // Calculate file size
+    file.seekg(0L, std::ios::end);
+    GLsizei length = static_cast<GLsizei>(file.tellg());
+    
+    // Get file memory
+    buffer.resize(length + 1);
+    
+    file.seekg(0L, std::ios::beg);
+    file.read(buffer.data(), length);
+    buffer[length] = '\0';
+    
+    if (file.fail()) {
+        std::cerr << "Error could not read file: " << name << std::endl;
+        file.close();
+        return false;
+    }
+    
+    file.close();
+    return true;
+}
+
+GLuint loadProgram(const char *vert, const char * frag) {
+    std::vector<GLchar> vsrc;
+    const bool vstat(readShaderSource(vert, vsrc));
+    std::vector<GLchar> fsrc;
+    const bool fstat(readShaderSource(frag, fsrc));
+    
+    return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
 }
 
 int main(int argc, const char * argv[]) {
@@ -89,23 +167,23 @@ int main(int argc, const char * argv[]) {
     
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     
-    static constexpr GLchar vsrc[] =
-      "#version 150 core\n"
-      "in vec4 position;\n"
-      "void main()\n"
-      "{\n"
-      " gl_Position = position;\n"
-      "}\n";
+//    static constexpr GLchar vsrc[] =
+//      "#version 150 core\n"
+//      "in vec4 position;\n"
+//      "void main()\n"
+//      "{\n"
+//      " gl_Position = position;\n"
+//      "}\n";
+//    
+//    static constexpr GLchar fsrc[] =
+//    "#version 150 core\n"
+//    "in vec4 position;\n"
+//    "void main()\n"
+//    "{\n"
+//    " fragment = vec4(1.0, 0.0, 0.0, 1.0);\n"
+//    "}\n";
     
-    static constexpr GLchar fsrc[] =
-    "#version 150 core\n"
-    "in vec4 position;\n"
-    "void main()\n"
-    "{\n"
-    " fragment = vec4(1.0, 0.0, 0.0, 1.0);\n"
-    "}\n";
-    
-    const GLuint program(createProgram(vsrc, fsrc));
+    const GLuint program(loadProgram("point.vert", "point.frag"));
     
     while (glfwWindowShouldClose(window) == GL_FALSE) {
         glClear(GL_COLOR_BUFFER_BIT);
