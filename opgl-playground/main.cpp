@@ -10,8 +10,10 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <memory>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Shape.h"
 
 // Show result of shader object compile check
 GLboolean printShaderInfoLog(GLuint shader, const char *str)
@@ -134,6 +136,14 @@ GLuint loadProgram(const char *vert, const char * frag) {
     return vstat && fstat ? createProgram(vsrc.data(), fsrc.data()) : 0;
 }
 
+constexpr Object::Vertex rectangleVertex[] =
+{
+    {-0.5f, -0.5f},
+    {0.5f, -0.5f},
+    {0.5f, 0.5f},
+    {-0.5f, 0.5f}
+};
+
 int main(int argc, const char * argv[]) {
     // Init GLFW
     if (glfwInit() == GL_FALSE)
@@ -167,28 +177,18 @@ int main(int argc, const char * argv[]) {
     
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     
-//    static constexpr GLchar vsrc[] =
-//      "#version 150 core\n"
-//      "in vec4 position;\n"
-//      "void main()\n"
-//      "{\n"
-//      " gl_Position = position;\n"
-//      "}\n";
-//    
-//    static constexpr GLchar fsrc[] =
-//    "#version 150 core\n"
-//    "in vec4 position;\n"
-//    "void main()\n"
-//    "{\n"
-//    " fragment = vec4(1.0, 0.0, 0.0, 1.0);\n"
-//    "}\n";
+    glViewport(100, 50, 300, 300);
     
     const GLuint program(loadProgram("point.vert", "point.frag"));
+    
+    std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
     
     while (glfwWindowShouldClose(window) == GL_FALSE) {
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(program);
+        
+        shape->draw();
         
         glfwSwapBuffers(window);
         glfwWaitEvents();

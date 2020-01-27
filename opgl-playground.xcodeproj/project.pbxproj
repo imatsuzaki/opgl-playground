@@ -27,6 +27,8 @@
 		45DCC61323D945B40069685E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		78F52AD323DDD8680099DE25 /* point.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = point.vert; sourceTree = "<group>"; };
 		78F52AD423DDD9850099DE25 /* point.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = point.frag; sourceTree = "<group>"; };
+		78F52AD623DF29B40099DE25 /* Object.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
+		78F52AD723DF2DAA0099DE25 /* Shape.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Shape.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,8 @@
 				45DCC61323D945B40069685E /* main.cpp */,
 				78F52AD323DDD8680099DE25 /* point.vert */,
 				78F52AD423DDD9850099DE25 /* point.frag */,
+				78F52AD623DF29B40099DE25 /* Object.h */,
+				78F52AD723DF2DAA0099DE25 /* Shape.h */,
 			);
 			path = "opgl-playground";
 			sourceTree = "<group>";
