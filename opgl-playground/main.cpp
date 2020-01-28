@@ -13,6 +13,7 @@
 #include <memory>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include "Window.h"
 #include "Shape.h"
 
 // Show result of shader object compile check
@@ -139,9 +140,9 @@ GLuint loadProgram(const char *vert, const char * frag) {
 constexpr Object::Vertex rectangleVertex[] =
 {
     {-0.5f, -0.5f},
-    {0.5f, -0.5f},
-    {0.5f, 0.5f},
-    {-0.5f, 0.5f}
+    {1.5f, -0.5f},
+    {1.5f, 1.5f},
+    {-0.5f, 1.5f}
 };
 
 int main(int argc, const char * argv[]) {
@@ -160,37 +161,26 @@ int main(int argc, const char * argv[]) {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     
-    GLFWwindow *const window(glfwCreateWindow(640, 480, "Hello!", NULL, NULL));
-    if (window == NULL)
-    {
-        std::cerr << "Can't create GLFW window." << std::endl;
-        return 1;
-    }
     
-    glfwMakeContextCurrent(window);
+    Window window;
     
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Can't initialize glew." << std::endl;
-        return 1;
-    }
-    
+    // 背景色の指定
     glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
     
+    //デバイス座標系で図形の表示を行う領域を指定
     glViewport(100, 50, 300, 300);
     
     const GLuint program(loadProgram("point.vert", "point.frag"));
     
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
     
-    while (glfwWindowShouldClose(window) == GL_FALSE) {
+    while (window) {
         glClear(GL_COLOR_BUFFER_BIT);
         
         glUseProgram(program);
         
         shape->draw();
         
-        glfwSwapBuffers(window);
-        glfwWaitEvents();
+        window.swapBuffers();
     }
 }
