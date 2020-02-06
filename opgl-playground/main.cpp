@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 #include "Window.h"
 #include "Shape.h"
+#include "Matrix.h"
 
 // シェーダオブジェクトのコンパイル結果を表示する
 //   shader: シェーダオブジェクト名
@@ -202,10 +203,7 @@ int main()
     const GLuint program(loadProgram("point.vert", "point.frag"));
     
     // uniform 変数の場所を取得する
-    //  const GLint aspectLoc(glGetUniformLocation(program, "aspect"));
-    const GLint sizeLoc(glGetUniformLocation(program, "size"));
-    const GLint scaleLoc(glGetUniformLocation(program, "scale"));
-    const GLint locationLoc(glGetUniformLocation(program, "location"));
+    const GLint modelLoc(glGetUniformLocation(program, "model"));
     
     // 図形データを作成する
     std::unique_ptr<const Shape> shape(new Shape(2, 4, rectangleVertex));
@@ -219,11 +217,32 @@ int main()
         // シェーダプログラムの使用開始
         glUseProgram(program);
         
-        // uniform 変数に値を設定する
-        glUniform2fv(sizeLoc, 1, window.getSize());
-        glUniform1f(scaleLoc, window.getScale());
-        glUniform2fv(locationLoc, 1, window.getLocation());
+        // 拡大縮小をウィンドウのサイズを元に計算
+        const GLfloat *const size(window.getSize());
+        const GLfloat scale(window.getScale() * 2.0f);
+        const Matrix scaling(Matrix::scale(
+                                           scale / size[0],
+                                           scale / size[1],
+                                           1.0f
+                                           )
+                             );
         
+        // 位置をウィンドウを中心に計算
+        const GLfloat *const position(window.getLocation());
+        const Matrix translation(
+                                 Matrix::translate(
+                                                   position[0],
+                                                   position[1],
+                                                   position[2]
+                                                   )
+                                 );
+        
+        // 位置と拡大縮小を元に、変換行列をつくる（ただ掛け算するだけ）
+        const Matrix model(translation * scaling);
+        
+        // vertexシェーダー内の値に代入する
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, model.data());
+       
         // 図形を描画する
         shape->draw();
         

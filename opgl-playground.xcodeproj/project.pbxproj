@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		45DCC61023D945B40069685E /* opgl-playground */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "opgl-playground"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45DCC61323D945B40069685E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		45FB33D223EBDDE8002D01F1 /* Matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Matrix.h; sourceTree = "<group>"; };
 		45FFF7CB23DFE6B600C9E3E7 /* Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
 		78F52AD323DDD8680099DE25 /* point.vert */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = point.vert; sourceTree = "<group>"; };
 		78F52AD423DDD9850099DE25 /* point.frag */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = point.frag; sourceTree = "<group>"; };
@@ -68,6 +69,7 @@
 				78F52AD623DF29B40099DE25 /* Object.h */,
 				78F52AD723DF2DAA0099DE25 /* Shape.h */,
 				45FFF7CB23DFE6B600C9E3E7 /* Window.h */,
+				45FB33D223EBDDE8002D01F1 /* Matrix.h */,
 			);
 			path = "opgl-playground";
 			sourceTree = "<group>";
