@@ -1,7 +1,7 @@
-# version 150 core
-uniform mat4 model;
+#version 150 core
+uniform mat4 modelview;
 in vec4 position;
 void main()
 {
-    gl_position = model * position;
+  gl_Position = modelview * position;
 }
