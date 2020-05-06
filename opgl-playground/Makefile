@@ -2,7 +2,7 @@ CXXFLAGS = -g -Wall -std=c++11 -I/usr/local/include
 LDLIBS = -L/usr/local/lib -lglfw3 -lGLEW -framework OpenGL \
         -framework CoreVideo -framework IOKit -framework Cocoa
 OBJECTS = $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-TARGET = opgl-playground
+TARGET = a.out
 
 .PHONY: clean
 
